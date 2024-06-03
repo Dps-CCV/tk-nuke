@@ -600,6 +600,20 @@ class NukeMenuGenerator(BaseMenuGenerator):
                 # don't match then we don't add it.
                 if command_context is None or command_context is self.engine.context:
                     node_menu_handle.addCommand(cmd.name, cmd.callback, icon=icon)
+                    try:
+                        ####DPS Write Shortcuts
+                        # # CUSTOM SHORTCUTS
+                        write_node_item = nuke.menu('Nodes').findItem("Image/Write")
+                        write_node_item.setShortcut("")
+
+                        nuke.menu('Nodes').findItem("Flow Production Tracking").findItem(
+                            "Render 16bits [Shotgun]").setShortcut('w')
+                        nuke.menu('Nodes').findItem("Flow Production Tracking").findItem(
+                            "PRECOMP [Shotgun]").setShortcut('Alt+w')
+                        nuke.menu('Nodes').findItem("Flow Production Tracking").findItem(
+                            "TECH_PRECOMP [Shotgun]").setShortcut('Alt+j')
+                    except:
+                        self.engine.logger.debug("No se ha podido registrar los atajos de nuke write")
             elif cmd.type == "context_menu":
                 cmd.add_command_to_menu(self._context_menu)
             else:

@@ -684,6 +684,8 @@ class NukeEngine(sgtk.platform.Engine):
         if self.has_ui and self._context_change_menu_rebuild:
             self.menu_generator.create_menu()
 
+
+
     #####################################################################################
     # Logging
 
