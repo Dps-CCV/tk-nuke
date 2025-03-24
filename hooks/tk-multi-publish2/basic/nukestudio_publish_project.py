@@ -110,7 +110,7 @@ class NukeStudioProjectPublishPlugin(HookBaseClass):
         """
 
         # inherit the settings from the base publish plugin
-        base_settings = super().settings or {}
+        base_settings = super(NukeStudioProjectPublishPlugin, self).settings or {}
 
         # settings specific to this class
         nukestudio_publish_settings = {
@@ -295,7 +295,7 @@ class NukeStudioProjectPublishPlugin(HookBaseClass):
         item.properties["path"] = path
 
         # run the base class validation
-        return super().validate(settings, item)
+        return super(NukeStudioProjectPublishPlugin, self).validate(settings, item)
 
     def publish(self, settings, item):
         """
@@ -321,7 +321,7 @@ class NukeStudioProjectPublishPlugin(HookBaseClass):
         item.properties["path"] = path
 
         # let the base class register the publish
-        super().publish(settings, item)
+        super(NukeStudioProjectPublishPlugin, self).publish(settings, item)
 
     def finalize(self, settings, item):
         """
@@ -335,7 +335,7 @@ class NukeStudioProjectPublishPlugin(HookBaseClass):
         """
 
         # do the base class finalization
-        super().finalize(settings, item)
+        super(NukeStudioProjectPublishPlugin, self).finalize(settings, item)
 
         project = item.properties["project"]
         path = item.properties["path"]

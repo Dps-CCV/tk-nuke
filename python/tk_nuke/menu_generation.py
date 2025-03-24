@@ -172,7 +172,7 @@ class HieroMenuGenerator(BaseMenuGenerator):
         :type engine: :class:`sgtk.platform.Engine`
         :param menu_name: The name of the menu to be created.
         """
-        super().__init__(engine, menu_name)
+        super(HieroMenuGenerator, self).__init__(engine, menu_name)
         self._menu_handle = None
         self._context_menus_to_apps = dict()
 
@@ -216,7 +216,7 @@ class HieroMenuGenerator(BaseMenuGenerator):
 
         # Now enumerate all items and create menu objects for them.
         menu_items = []
-        for cmd_name, cmd_details in commands.items():
+        for (cmd_name, cmd_details) in commands.items():
             menu_items.append(HieroAppCommand(self.engine, cmd_name, cmd_details))
 
         # Now add favourites.
@@ -239,13 +239,13 @@ class HieroMenuGenerator(BaseMenuGenerator):
         }
 
         remove = set()
-        for key, apps in self._context_menus_to_apps.items():
+        for (key, apps) in self._context_menus_to_apps.items():
             items = self.engine.get_setting(key)
             for item in items:
                 app_instance_name = item["app_instance"]
                 menu_name = item["name"]
                 # Scan through all menu items.
-                for i, cmd in enumerate(menu_items):
+                for (i, cmd) in enumerate(menu_items):
                     if (
                         cmd.app_instance_name == app_instance_name
                         and cmd.name == menu_name
@@ -483,7 +483,7 @@ class NukeStudioMenuGenerator(HieroMenuGenerator):
         if not add_commands:
             return
 
-        for cmd_name, cmd_details in node_commands.items():
+        for (cmd_name, cmd_details) in node_commands.items():
             cmd = NukeAppCommand(self.engine, cmd_name, cmd_details)
 
             # Get icon if specified - default to sgtk icon if not specified.
@@ -533,7 +533,7 @@ class NukeMenuGenerator(BaseMenuGenerator):
         :type engine: :class:`sgtk.platform.Engine`
         :param menu_name: The name of the menu to be created.
         """
-        super().__init__(engine, menu_name)
+        super(NukeMenuGenerator, self).__init__(engine, menu_name)
         self._dialogs = []
 
     def create_menu(self, add_commands=True):
@@ -568,7 +568,7 @@ class NukeMenuGenerator(BaseMenuGenerator):
 
         # Now enumerate all items and create menu objects for them.
         menu_items = []
-        for cmd_name, cmd_details in self.engine.commands.items():
+        for (cmd_name, cmd_details) in self.engine.commands.items():
             menu_items.append(NukeAppCommand(self.engine, cmd_name, cmd_details))
 
         # Sort the list of commands in name order.
@@ -768,7 +768,7 @@ class BaseAppCommand(object):
             self._app_name = None
         self._app_instance_name = None
         if self._app:
-            for app_instance_name, app_instance_obj in engine.apps.items():
+            for (app_instance_name, app_instance_obj) in engine.apps.items():
                 if self._app and self._app == app_instance_obj:
                     self._app_instance_name = app_instance_name
 
@@ -869,7 +869,7 @@ class HieroAppCommand(BaseAppCommand):
                         includes a properties dict as well as a callback
                         in the form of a callable object.
         """
-        super().__init__(engine, name, command_dict)
+        super(HieroAppCommand, self).__init__(engine, name, command_dict)
         self._requires_selection = False
         self._sender = None
         self._event_type = None
@@ -988,7 +988,7 @@ class NukeAppCommand(BaseAppCommand):
     """
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        super(NukeAppCommand, self).__init__(*args, **kwargs)
         self._original_callback = self._callback
         self.callback = self._non_pane_menu_callback_wrapper
 

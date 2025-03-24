@@ -109,7 +109,7 @@ class NukeSessionPublishPlugin(HookBaseClass):
         """
 
         # inherit the settings from the base publish plugin
-        base_settings = super().settings or {}
+        base_settings = super(NukeSessionPublishPlugin, self).settings or {}
 
         # settings specific to this class
         nuke_publish_settings = {
@@ -287,7 +287,7 @@ class NukeSessionPublishPlugin(HookBaseClass):
         item.properties["path"] = path
 
         # run the base class validation
-        return super().validate(settings, item)
+        return super(NukeSessionPublishPlugin, self).validate(settings, item)
 
     def publish(self, settings, item):
         """
@@ -310,12 +310,12 @@ class NukeSessionPublishPlugin(HookBaseClass):
         item.properties["path"] = path
 
         # add dependencies for the base class to register when publishing
-        item.properties["publish_dependencies"] = (
-            _nuke_find_additional_script_dependencies()
-        )
+        item.properties[
+            "publish_dependencies"
+        ] = _nuke_find_additional_script_dependencies()
 
         # let the base class register the publish
-        super().publish(settings, item)
+        super(NukeSessionPublishPlugin, self).publish(settings, item)
 
     def finalize(self, settings, item):
         """
@@ -329,7 +329,7 @@ class NukeSessionPublishPlugin(HookBaseClass):
         """
 
         # do the base class finalization
-        super().finalize(settings, item)
+        super(NukeSessionPublishPlugin, self).finalize(settings, item)
 
         # bump the session file to the next version
         self._save_to_next_version(item.properties["path"], item, _save_session)
