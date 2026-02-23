@@ -8,7 +8,6 @@
 # agreement to the Shotgun Pipeline Toolkit Source Code License. All rights
 # not expressly granted therein are reserved by Shotgun Software Inc.
 
-from __future__ import print_function
 import os
 import sys
 import time
@@ -74,7 +73,7 @@ def bootstrap(plugin_root_path):
 
         # open the yaml file and read the data
         with open(plugin_info_yml, "r") as plugin_info_fh:
-            plugin_info = yaml.load(plugin_info_fh)
+            plugin_info = yaml.load(plugin_info_fh, Loader=yaml.FullLoader)
 
         base_config = plugin_info["base_configuration"]
         plugin_id = plugin_info["plugin_id"]

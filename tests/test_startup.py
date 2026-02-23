@@ -8,18 +8,16 @@
 # agreement to the Shotgun Pipeline Toolkit Source Code License. All rights
 # not expressly granted therein are reserved by Shotgun Software Inc.
 
-from __future__ import with_statement
-from __future__ import print_function
 import os
 import sys
 
 from tank_test.tank_test_base import TankTestBase
 from tank_test.tank_test_base import setUpModule  # noqa
-from tank_vendor import six
 
 import sgtk
 
-import mock
+from unittest import mock
+from unittest import skip
 import contextlib
 
 
@@ -35,6 +33,61 @@ class TestStartup(TankTestBase):
     # Mocked folder hierarchy for OSX
     _mac_mock_hierarchy = {
         "Applications": {
+            "Nuke16.0v1": [
+                "Hiero16.0v1.app",
+                "HieroPlayer16.0v1.app",
+                "Nuke16.0v1 Non-commercial.app",
+                "Nuke16.0v1.app",
+                "NukeAssist16.0v1.app",
+                "NukeStudio16.0v1 Non-commercial.app",
+                "NukeStudio16.0v1.app",
+                "NukeX16.0v1 Non-commercial.app",
+                "NukeX16.0v1.app",
+            ],
+            "Nuke15.1v2": [
+                "Hiero15.1v2.app",
+                "HieroPlayer15.1v2.app",
+                "Nuke15.1v2 Non-commercial.app",
+                "Nuke15.1v2.app",
+                "NukeAssist15.1v2.app",
+                "NukeStudio15.1v2 Non-commercial.app",
+                "NukeStudio15.1v2.app",
+                "NukeX15.1v2 Non-commercial.app",
+                "NukeX15.1v2.app",
+            ],
+            "Nuke14.0v8": [
+                "Hiero14.0v8.app",
+                "HieroPlayer14.0v8.app",
+                "Nuke14.0v8 Non-commercial.app",
+                "Nuke14.0v8.app",
+                "NukeAssist14.0v8.app",
+                "NukeStudio14.0v8 Non-commercial.app",
+                "NukeStudio14.0v8.app",
+                "NukeX14.0v8 Non-commercial.app",
+                "NukeX14.0v8.app",
+            ],
+            "Nuke13.0v9": [
+                "Hiero13.0v9.app",
+                "HieroPlayer13.0v9.app",
+                "Nuke13.0v9 Non-commercial.app",
+                "Nuke13.0v9.app",
+                "NukeAssist13.0v9.app",
+                "NukeStudio13.0v9 Non-commercial.app",
+                "NukeStudio13.0v9.app",
+                "NukeX13.0v9 Non-commercial.app",
+                "NukeX13.0v9.app",
+            ],
+            "Nuke12.2v5": [
+                "Hiero12.2v5.app",
+                "HieroPlayer12.2v5.app",
+                "Nuke12.2v5 Non-commercial.app",
+                "Nuke12.2v5.app",
+                "NukeAssist12.2v5.app",
+                "NukeStudio12.2v5 Non-commercial.app",
+                "NukeStudio12.2v5.app",
+                "NukeX12.2v5 Non-commercial.app",
+                "NukeX12.2v5.app",
+            ],
             "Nuke10.0v5": [
                 "Hiero10.0v5.app",
                 "HieroPlayer10.0v5.app",
@@ -88,6 +141,11 @@ class TestStartup(TankTestBase):
     _windows_mock_hiearchy = {
         "C:\\": {
             "Program Files": {
+                "Nuke16.0v1": ["Nuke16.0.exe"],
+                "Nuke15.1v2": ["Nuke15.1.exe"],
+                "Nuke14.0v8": ["Nuke14.0.exe"],
+                "Nuke13.0v9": ["Nuke13.0.exe"],
+                "Nuke12.2v5": ["Nuke12.5.exe"],
                 "Nuke10.0v5": ["Nuke10.0.exe"],
                 "Nuke9.0v8": ["Nuke9.0.exe"],
                 "Nuke8.0v4": ["Nuke8.0.exe"],
@@ -101,6 +159,11 @@ class TestStartup(TankTestBase):
     _linux_mock_hierarchy = {
         "usr": {
             "local": {
+                "Nuke16.0v1": ["Nuke16.0"],
+                "Nuke15.1v2": ["Nuke15.1"],
+                "Nuke14.0v8": ["Nuke14.0"],
+                "Nuke13.0v9": ["Nuke13.0"],
+                "Nuke12.2v5": ["Nuke12.5"],
                 "Nuke10.0v5": ["Nuke10.0"],
                 "Nuke9.0v8": ["Nuke9.0"],
                 "Nuke8.0v4": ["Nuke8.0"],
@@ -114,7 +177,7 @@ class TestStartup(TankTestBase):
         """
         Prepares the environment for unit tests.
         """
-        super(TestStartup, self).setUp()
+        super().setUp()
 
         # Add an environment variable that will allow the Toolkit environment to pick up the
         # engine's code.
@@ -210,35 +273,91 @@ class TestStartup(TankTestBase):
         # is the same as os.listdir
         return list(self._glob_wrapper(directory, False))
 
+    def test_nuke16(self):
+        """
+        Ensures we are returning the right variants for Nuke 16.
+        """
+        self._test_nuke(
+            [
+                "Nuke 16.0v1",
+                "NukeX 16.0v1",
+                "NukeStudio 16.0v1",
+                "NukeAssist 16.0v1",
+            ],
+            "16.0v1",
+        )
+
+    def test_nuke15(self):
+        """
+        Ensures we are returning the right variants for Nuke 15.
+        """
+        self._test_nuke(
+            [
+                "Nuke 15.1v2",
+                "NukeX 15.1v2",
+                "NukeStudio 15.1v2",
+                "NukeAssist 15.1v2",
+            ],
+            "15.1v2",
+        )
+
+    def test_nuke14(self):
+        """
+        Ensures we are returning the right variants for Nuke 14.
+        """
+        self._test_nuke(
+            [
+                "Nuke 14.0v8",
+                "NukeX 14.0v8",
+                "NukeStudio 14.0v8",
+                "NukeAssist 14.0v8",
+            ],
+            "14.0v8",
+        )
+
+    def test_nuke13(self):
+        """
+        Ensures we are returning the right variants for Nuke 13.
+        """
+        self._test_nuke(
+            [
+                "Nuke 13.0v9",
+                "NukeX 13.0v9",
+                "NukeStudio 13.0v9",
+                "NukeAssist 13.0v9",
+            ],
+            "13.0v9",
+        )
+
+    def test_nuke12(self):
+        """
+        Ensures we are returning the right variants for Nuke 12.
+        """
+        self._test_nuke([], "12.2v5")
+
     def test_nuke10(self):
         """
         Ensures we are returning the right variants for Nuke 10.
         """
-        self._test_nuke(
-            ["Nuke 10.0v5", "NukeX 10.0v5", "NukeStudio 10.0v5", "NukeAssist 10.0v5"],
-            "10.0v5",
-        )
+        self._test_nuke([], "10.0v5")
 
     def test_nuke9(self):
         """
         Ensures we are returning the right variants for Nuke 9.
         """
-        self._test_nuke(
-            ["Nuke 9.0v8", "NukeX 9.0v8", "NukeStudio 9.0v8", "NukeAssist 9.0v8"],
-            "9.0v8",
-        )
+        self._test_nuke([], "9.0v8")
 
     def test_nuke8(self):
         """
         Ensures we are returning the right variants for Nuke 8.
         """
-        self._test_nuke(["Nuke 8.0v4", "NukeX 8.0v4", "NukeAssist 8.0v4"], "8.0v4")
+        self._test_nuke([], "8.0v4")
 
     def test_nuke7(self):
         """
         Ensures we are returning the right variants for Nuke 7.
         """
-        self._test_nuke(["Nuke 7.0v10", "NukeX 7.0v10", "NukeAssist 7.0v10"], "7.0v10")
+        self._test_nuke([], "7.0v10")
 
     def test_nuke7_9(self):
         """
@@ -272,12 +391,8 @@ class TestStartup(TankTestBase):
                 with mock.patch("glob._iterdir", wraps=self._glob_wrapper39):
                     yield
 
-            elif six.PY3:
-                with mock.patch("glob._iterdir", wraps=self._glob_wrapper):
-                    yield
-
             else:
-                with mock.patch("os.listdir", wraps=self._os_listdir_wrapper):
+                with mock.patch("glob._iterdir", wraps=self._glob_wrapper):
                     yield
         else:
             yield

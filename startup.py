@@ -14,6 +14,9 @@ import pprint
 
 from sgtk.platform import SoftwareLauncher, SoftwareVersion, LaunchInformation
 
+# Nuke versions compatibility constants
+VERSION_OLDEST_COMPATIBLE = (13, 0, 1)
+
 
 class NukeLauncher(SoftwareLauncher):
     """
@@ -48,7 +51,7 @@ class NukeLauncher(SoftwareLauncher):
         "NukeAssist",
         "NukeStudio",
         "NukeX",
-        "Hiero"
+        "Hiero",
     ]
 
     # This dictionary defines a list of executable template strings for each
@@ -68,7 +71,7 @@ class NukeLauncher(SoftwareLauncher):
             # C:/Program Files/Nuke10.0v5/Nuke10.0.exe
             r"C:\Program Files\Nuke{version}\Nuke{major_minor_version}.exe",
         ],
-        "linux2": [
+        "linux": [
             # /usr/local/Nuke10.0v5/Nuke10.0
             "/usr/local/Nuke{version}/Nuke{major_minor_version}",
             # /home/<username>/Nuke10.0v5/Nuke10.0
@@ -121,11 +124,11 @@ class NukeLauncher(SoftwareLauncher):
         executable_templates = self.EXECUTABLE_MATCH_TEMPLATES.get(
             "darwin"
             if sgtk.util.is_macos()
-            else "win32"
-            if sgtk.util.is_windows()
-            else "linux2"
-            if sgtk.util.is_linux()
-            else []
+            else (
+                "win32"
+                if sgtk.util.is_windows()
+                else "linux" if sgtk.util.is_linux() else []
+            )
         )
 
         # Certain platforms have more than one location for installed software
@@ -218,14 +221,14 @@ class NukeLauncher(SoftwareLauncher):
         if version.product not in self._get_products_from_version(version.version):
             return False, "Toolkit does not support '%s'." % version.product
 
-        return super(NukeLauncher, self)._is_supported(version)
+        return super()._is_supported(version)
 
     @property
     def minimum_supported_version(self):
         """
         Minimum supported version by this launcher.
         """
-        return "7.0v10"
+        return "{}.{}v{}".format(*VERSION_OLDEST_COMPATIBLE)
 
     def prepare_launch(self, exec_path, args, file_to_open=None):
         """
